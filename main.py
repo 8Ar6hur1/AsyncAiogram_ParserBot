@@ -68,7 +68,7 @@ async def all_message(message: Message):
         # Пересилаємо повідомлення в канал
         await bot.send_message(CHANNEL_ID, f'{message_text}')
         # Відповідаємо користувачу
-        await message.answer(f'Chat ID: {chat_id}\nUser ID:{user_id}\nMessage: {message_text}')
+        await message.answer(f'Chat ID: {chat_id}\nUser ID:{user_id}\n\nMessage: {message_text}')
     else:
         await message.answer('Нажаль, ваш обліковий запис не має достатніх прав для доступу до функцій цього бота.\n\n'
                              'Якщо ви вважаєте, що це помилка, зверніться до адміністратора для отримання прав доступу.\n\n'
