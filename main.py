@@ -76,7 +76,9 @@ async def start_bot(message: Message):
 @dp.message(Command(commands='help'))
 async def send_help(message: Message):
     await message.reply('Команди бота:\n\n'
-                        '')
+                        '/start - Запуск бота\n\n'
+                        '/get_notebook - Отримати список ноутбуків з "Rozetka"\n\n'
+                        '/get_my_id - Отримати своє id\n\n')
 
 
 @dp.message(Command(commands='get_notebook'))
@@ -97,7 +99,8 @@ async def all_message(message: Message):
         # Пересилаємо повідомлення в канал
         await bot.send_message(CHANNEL_ID, f'{message_text}')
         # Відповідаємо користувачу
-        await message.answer(f'Chat ID: {chat_id}\nUser ID:{user_id}\n\nMessage: {message_text}')
+        await message.answer(f'Chat ID: {chat_id}\n\n'
+                             f'Message:\n\n{message_text}')
     else:
         await message.answer('Нажаль, ваш обліковий запис не має достатніх прав для доступу до функцій цього бота.\n\n'
                              'Якщо ви вважаєте, що це помилка, зверніться до адміністратора для отримання прав доступу.\n\n'
