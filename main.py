@@ -79,6 +79,12 @@ async def send_help(message: Message):
                         '/start - Запуск бота\n\n'
                         '/get_notebook - Отримати список ноутбуків з "Rozetka"\n\n'
                         '/get_my_id - Отримати своє id\n\n')
+    
+
+@dp.message(Command(commands='get_my_id'))
+async def get_my_id(message: Message):
+    chat_id = message.from_user.id
+    await message.answer(f'Ваш User ID: {chat_id}')
 
 
 @dp.message(Command(commands='get_notebook'))
