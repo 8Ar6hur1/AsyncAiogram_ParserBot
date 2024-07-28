@@ -20,6 +20,7 @@ load_dotenv()
 
 API_TOKEN = os.getenv('API_TOKEN')
 CHANNEL_ID = os.getenv('CHANNEL_ID')
+ADMIN_IDS = os.getenv('ADMIN_IDS')
 ADMIN_NAME = os.getenv('ADMIN_NAME')
 
 if API_TOKEN is None:
@@ -70,6 +71,12 @@ async def start_bot(message: Message):
         await message.answer(f'Привіт {message.from_user.first_name}, я пересилаю повідомлення, які ти мені напишиш, і відправляю їх в телеграм канал\n{CHANNEL_ID}')
     else:
         await message.answer(f'У вас немає прав доступу до бота\nYour User ID: {user_id}')
+
+
+@dp.message(Command(commands='help'))
+async def send_help(message: Message):
+    await message.reply('Команди бота:\n\n'
+                        '')
 
 
 @dp.message(Command(commands='get_notebook'))
