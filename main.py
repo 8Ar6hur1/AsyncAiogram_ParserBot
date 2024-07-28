@@ -67,18 +67,28 @@ def admin_name(user_name: str) -> bool:
 @dp.message(CommandStart())
 async def start_bot(message: Message):
     user_id = message.from_user.id
+    first_name = message.from_user.first_name
     if is_admin(user_id):
-        await message.answer(f'Привіт {message.from_user.first_name}, я пересилаю повідомлення, які ти мені напишиш, і відправляю їх в телеграм канал\n{CHANNEL_ID}')
+        await message.answer(f'Привіт {first_name}, '
+                             f'моя головна функція, це перенаправлення повідомленнь, які ви мені пишите в телеграм канал {CHANNEL_ID}')
     else:
-        await message.answer(f'У вас немає прав доступу до бота\nYour User ID: {user_id}')
+        await message.answer('Зачекайте будь ласка, триває додаткова перевірка на адміністатора')
+        await asyncio.sleep(3)
+        if is_admin(user_id):
+            await message.answer('Чудово, ви адміністратор!')
+        else:
+            await message.answer('На жаль, ви не адміністратор.\n'
+                                 f'Якщо ви вважаєте це помилкою, зверніться до адміністраторів')
 
 
 @dp.message(Command(commands='help'))
 async def send_help(message: Message):
-    await message.reply('Команди бота:\n\n'
-                        '/start - Запуск бота\n\n'
-                        '/get_notebook - Отримати список ноутбуків з "Rozetka"\n\n'
-                        '/get_my_id - Отримати своє id\n\n')
+    await message.reply('Команди бота:\n'
+                        '/start - Запуск бота\n'
+                        '/help - Список команд бота\n'
+                        '/get_notebook - Отримати список ноутбуків з "Rozetka"\n'
+                        '/get_my_id - Отримати своє id\n'
+                        '/channel_message - Для адміністраторів\n')
     
 
 @dp.message(Command(commands='get_my_id'))
@@ -87,19 +97,10 @@ async def get_my_id(message: Message):
     await message.answer(f'Ваш User ID: {chat_id}')
 
 
-@dp.message(Command(commands='get_notebook'))
-async def get_notebook_info(message: Message):
-    title, description, url = await scrape_rozetka()
-    response = (f'Назва: {title}\n\n'
-                f'Опис: {description}\n\n'
-                f'Посилання: {url}')
-    await message.reply(response)
-
-
-@dp.message()
-async def all_message(message: Message):
-    chat_id = message.chat.id
+@dp.message(Command(commands='channel_message'))
+async def get_my_id(message: Message):
     user_id = message.from_user.id
+    chat_id = message.chat.id
     message_text = message.text
     if is_admin(user_id):
         # Пересилаємо повідомлення в канал
@@ -108,16 +109,26 @@ async def all_message(message: Message):
         await message.answer(f'Chat ID: {chat_id}\n\n'
                              f'Message:\n\n{message_text}')
     else:
-        await message.answer('Нажаль, ваш обліковий запис не має достатніх прав для доступу до функцій цього бота.\n\n'
+        await message.answer('На жаль, ваш обліковий запис не має достатніх прав для доступу до функцій цього бота.\n\n'
                              'Якщо ви вважаєте, що це помилка, зверніться до адміністратора для отримання прав доступу.\n\n'
-                             f'Адміністратори:\n(З\'явиться в майбутньому)')                             
+                             f'Адміністратори:\n(З\'явиться в майбутньому)')  
+
+
+@dp.message(Command(commands='get_notebook'))
+async def get_notebook_info(message: Message):
+    title, description, url = await scrape_rozetka()
+    response = (f'Назва: {title}\n\n'
+                f'Опис: {description}\n\n'
+                f'Посилання: {url}')
+    await message.reply(response)                       
 
 
 # В майбутньому добавити SQL де будуть імена усіх адміністраторів
 
+
 # Start
 async def main():
-    await dp.start_polling(bot)
+    await dp.start_polling(bot, skip_updates=True)
 
 if __name__ == '__main__':
     asyncio.run(main())
