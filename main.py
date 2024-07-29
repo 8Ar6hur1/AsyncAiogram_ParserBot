@@ -29,6 +29,9 @@ if API_TOKEN is None:
 if CHANNEL_ID is None:
     raise ValueError('CHANNEL_ID не встановлено в оточенні або файлі .env')
 
+if ADMIN_IDS is None:
+    raise ValueError('ADMIN_IDS не встановлено в оточенні або файлі .env')
+
 if ADMIN_NAME is None:
     raise ValueError('ADMIN_NAME не встановлено в оточенні або файлі .env')
 
@@ -111,7 +114,7 @@ async def get_my_id(message: Message):
     else:
         await message.answer('На жаль, ваш обліковий запис не має достатніх прав для доступу до функцій цього бота.\n\n'
                              'Якщо ви вважаєте, що це помилка, зверніться до адміністратора для отримання прав доступу.\n\n'
-                             f'Адміністратори: (З\'явиться в майбутньому)')  
+                             f'Адміністратори: (З\'явиться в майбутньому)')
 
 
 @dp.message(Command(commands='get_notebook'))
@@ -120,7 +123,7 @@ async def get_notebook_info(message: Message):
     response = (f'Назва: {title}\n\n'
                 f'Опис: {description}\n\n'
                 f'Посилання: {url}')
-    await message.reply(response)                       
+    await message.reply(response)
 
 
 # В майбутньому добавити SQL де будуть імена усіх адміністраторів
